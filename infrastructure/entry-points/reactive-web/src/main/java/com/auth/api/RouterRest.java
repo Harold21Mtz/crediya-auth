@@ -28,11 +28,11 @@ public class RouterRest {
                     beanClass = Handler.class,
                     beanMethod = "createUser",
                     operation = @Operation(
-                            operationId = "CreateNewUser",
+                            operationId = "CrearUsuario",
                             summary = "Crear un nuevo usuario",
                             requestBody = @RequestBody(
                                     required = true,
-                                    description = "User request",
+                                    description = "Crea un nuevo usuario en el sistema",
                                     content = @Content(
                                             mediaType = "application/json",
                                             schema = @Schema(implementation = UserRequest.class)
