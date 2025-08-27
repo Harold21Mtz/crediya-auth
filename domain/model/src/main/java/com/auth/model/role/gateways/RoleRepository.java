@@ -1,4 +1,4 @@
-package com.auth.model.user.gateways;
+package com.auth.model.role.gateways;
 
 import reactor.core.publisher.Mono;
 

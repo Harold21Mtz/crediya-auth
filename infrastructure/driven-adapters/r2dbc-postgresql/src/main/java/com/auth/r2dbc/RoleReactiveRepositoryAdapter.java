@@ -1,11 +1,8 @@
 package com.auth.r2dbc;
 
-import com.auth.model.user.Role;
-import com.auth.model.user.User;
-import com.auth.model.user.gateways.RoleRepository;
-import com.auth.model.user.gateways.UserRepository;
+import com.auth.model.role.Role;
+import com.auth.model.role.gateways.RoleRepository;
 import com.auth.r2dbc.entity.RoleEntity;
-import com.auth.r2dbc.entity.UserEntity;
 import com.auth.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;

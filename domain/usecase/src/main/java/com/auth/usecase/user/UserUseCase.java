@@ -1,8 +1,9 @@
 package com.auth.usecase.user;
 
 import com.auth.model.user.User;
-import com.auth.model.user.gateways.RoleRepository;
+import com.auth.model.role.gateways.RoleRepository;
 import com.auth.model.user.gateways.UserRepository;
+import com.auth.model.utils.UserCaseLogger;
 import com.auth.usecase.user.exception.ConflictException;
 import com.auth.usecase.user.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class UserUseCase {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserCaseLogger logger;
 
     public Mono<Void> existsEmail(String email) {
         return userRepository.existsByEmail(email)
@@ -33,9 +35,11 @@ public class UserUseCase {
     }
 
     public Mono<Void> createUser(User user) {
+        logger.trace("Inicio de creación de usuario");
         return existsEmail(user.getEmail())
                 .then(existsRole(user.getRoleId()))
                 .then(userRepository.saveUser(user))
-                .then();
+                .doOnSuccess(v -> logger.info("Usuario creado con correo: " + user.getEmail()))
+                .doOnError(err -> logger.error("Error en crear el usuario, error: ", err));
     }
 }

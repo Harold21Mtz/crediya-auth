@@ -6,7 +6,6 @@ import com.auth.r2dbc.entity.UserEntity;
 import com.auth.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -17,17 +16,13 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         UserReactiveRepository
         > implements UserRepository {
 
-    private final TransactionalOperator transactionalOperator;
-
-    public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
+    public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper) {
         super(repository, mapper, d -> mapper.map(d, User.class));
-        this.transactionalOperator = transactionalOperator;
     }
 
     @Override
     public Mono<Void> saveUser(User user) {
         return repository.save(this.toData(user))
-                .as(transactionalOperator::transactional)
                 .then();
     }
 

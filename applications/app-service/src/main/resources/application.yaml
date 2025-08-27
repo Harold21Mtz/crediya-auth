@@ -30,3 +30,7 @@ adapters:
     schema: public
     username: postgres
     password: Harold123
+logging:
+  level:
+    root: INFO
+    com.auth: TRACE

@@ -1,4 +1,4 @@
-package com.auth.model.user;
+package com.auth.model.role;
 
 import lombok.*;
 
