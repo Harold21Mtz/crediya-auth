@@ -1,5 +1,6 @@
 package com.crediya.auth.config;
 
+import com.auth.config.UseCasesConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;

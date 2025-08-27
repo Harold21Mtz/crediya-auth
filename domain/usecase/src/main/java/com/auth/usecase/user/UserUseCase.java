@@ -41,8 +41,8 @@ public class UserUseCase {
 
         return transactionalWrapper.transactional(
                 existsEmail(user.getEmail())
-                        .then(existsRole(user.getRoleId()))
-                        .then(userRepository.saveUser(user))
+                        .then(Mono.defer(() -> existsRole(user.getRoleId())))
+                        .then(Mono.defer(() -> userRepository.saveUser(user)))
                         .doOnSuccess(v -> logger.info("Usuario creado con correo: " + user.getEmail()))
 //                        .doOnError(err -> logger.error("Error en crear el usuario", err))
         );
