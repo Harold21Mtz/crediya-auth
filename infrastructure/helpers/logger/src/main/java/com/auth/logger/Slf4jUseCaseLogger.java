@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Slf4jUseCaseLogger implements UserCaseLogger {
 
-    private static final Logger logger =  LoggerFactory.getLogger(Slf4jUseCaseLogger.class);
+    private static final Logger logger = LoggerFactory.getLogger(Slf4jUseCaseLogger.class);
 
     @Override
     public void trace(String message) {

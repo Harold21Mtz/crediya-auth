@@ -1,36 +1,67 @@
 package com.auth.api.errorHandler;
 
+import com.auth.api.utils.ValidationErrorResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebExceptionHandler;
 import reactor.core.publisher.Mono;
 
-public class GlobalErrorHandler {
+import java.util.Map;
 
-    public static Mono<ServerResponse> handle(Throwable ex) {
+@Component
+@Order(-2)
+public class GlobalErrorHandler implements WebExceptionHandler {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    @NonNull
+    public Mono<Void> handle(@NonNull ServerWebExchange exchange, @NonNull Throwable ex) {
         HttpStatus status;
-        String error = switch (ex.getClass().getSimpleName()) {
+        Object message;
+
+        switch (ex.getClass().getSimpleName()) {
+            case "ValidationErrorResponse" -> {
+                status = HttpStatus.BAD_REQUEST;
+                message = ((ValidationErrorResponse) ex).getErrores();
+            }
+
             case "AccessDeniedException" -> {
                 status = HttpStatus.FORBIDDEN;
-                yield ex.getMessage();
+                message = ex.getMessage();
             }
             case "ConflictException" -> {
                 status = HttpStatus.CONFLICT;
-                yield ex.getMessage();
+                message = ex.getMessage();
             }
             case "ResourceNotFoundException" -> {
                 status = HttpStatus.NOT_FOUND;
-                yield ex.getMessage();
+                message = ex.getMessage();
             }
             default -> {
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
-                yield "Error inesperado: " + ex.getMessage();
+                message = "Error inesperado: " + ex.getMessage();
             }
-        };
+        }
 
-        return ServerResponse
-                .status(status)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("{\"messageError\": \"" + error + "\"}");
+        exchange.getResponse().setStatusCode(status);
+        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> body = Map.of("Error", message);
+
+        try {
+            byte[] bytes = objectMapper.writeValueAsBytes(body);
+            return exchange.getResponse()
+                    .writeWith(Mono.just(exchange.getResponse()
+                            .bufferFactory()
+                            .wrap(bytes)));
+        } catch (Exception e) {
+            return Mono.error(e);
+        }
     }
 }
