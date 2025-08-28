@@ -1,4 +1,4 @@
-package com.auth.r2dbc;
+package com.auth.r2dbc.role;
 
 import com.auth.r2dbc.entity.RoleEntity;
 import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;

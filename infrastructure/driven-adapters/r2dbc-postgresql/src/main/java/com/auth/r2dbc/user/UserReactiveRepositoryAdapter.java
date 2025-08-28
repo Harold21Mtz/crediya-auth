@@ -1,4 +1,4 @@
-package com.auth.r2dbc;
+package com.auth.r2dbc.user;
 
 import com.auth.model.user.User;
 import com.auth.model.user.gateways.UserRepository;

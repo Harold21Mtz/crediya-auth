@@ -1,4 +1,4 @@
-package com.auth.usecase.user.exception;
+package com.auth.usecase.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

@@ -1,4 +1,4 @@
-package com.auth.r2dbc;
+package com.auth.r2dbc.role;
 
 import com.auth.model.role.Role;
 import com.auth.model.role.gateways.RoleRepository;

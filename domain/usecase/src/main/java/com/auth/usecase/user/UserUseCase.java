@@ -5,8 +5,8 @@ import com.auth.model.role.gateways.RoleRepository;
 import com.auth.model.user.gateways.UserRepository;
 import com.auth.model.utils.TransactionalWrapper;
 import com.auth.model.utils.UserCaseLogger;
-import com.auth.usecase.user.exception.ConflictException;
-import com.auth.usecase.user.exception.ResourceNotFoundException;
+import com.auth.usecase.exception.ConflictException;
+import com.auth.usecase.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
