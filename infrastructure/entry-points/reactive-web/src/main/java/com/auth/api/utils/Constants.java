@@ -9,7 +9,9 @@ public class Constants {
     public static final String LASTNAME_REQUIRED = "El apellido es obligatorio";
     public static final String BIRTHDATE_REQUIRED = "La fecha de nacimiento es obligatoria";
     public static final String DOCUMENT_REQUIRED = "El documento es obligatorio";
+    public static final String DOCUMENT_CHARACTERS = "El documento debe tener entre 5 y 20 caracteres";
     public static final String PHONE_REQUIRED = "El teléfono es obligatorio";
+    public static final String PHONE_CHARACTERS = "El teléfono debe tener máximo 12 caracteres";
     public static final String EMAIL_REQUIRED = "El correo es obligatorio";
     public static final String EMAIL_INVALID = "El correo no tiene un formato válido";
     public static final String ADDRESS_REQUIRED = "La dirección es obligatoria";

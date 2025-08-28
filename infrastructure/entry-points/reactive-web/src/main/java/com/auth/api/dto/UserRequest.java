@@ -18,9 +18,11 @@ public record UserRequest(
         LocalDate birthDate,
 
         @NotBlank(message = DOCUMENT_REQUIRED)
+        @Size(min = 5, max = 20, message = DOCUMENT_CHARACTERS)
         String documentNumber,
 
         @NotBlank(message = PHONE_REQUIRED)
+        @Size(max = 12, message = PHONE_CHARACTERS)
         String phone,
 
         @NotBlank(message = EMAIL_REQUIRED)
