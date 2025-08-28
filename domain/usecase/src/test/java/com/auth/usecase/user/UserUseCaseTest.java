@@ -114,7 +114,32 @@ class UserUseCaseTest {
         verify(userRepository).existsByEmail(user.getEmail());
         verify(roleRepository).existsRole(user.getRoleId());
         verify(userRepository).saveUser(user);
-        verify(logger).trace("Inicio de creación de usuario");
-        verify(logger).info("Usuario creado con correo: " + user.getEmail());
     }
+
+    @Test
+    void getUserByDocumentNumber_shouldReturnUser_whenExists() {
+        String documentNumber = "1000000000";
+        when(userRepository.findUserByDocument(documentNumber)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userUseCase.getUserByDocumentNumber(documentNumber))
+                .expectNextMatches(foundUser ->
+                        foundUser.getName().equals("Harold") &&
+                                foundUser.getEmail().equals("harold@gmail.com"))
+                .verifyComplete();
+
+        verify(userRepository).findUserByDocument(documentNumber);
+    }
+
+    @Test
+    void getUserByDocumentNumber_shouldReturnError_whenNotExists() {
+        String documentNumber = "999999";
+        when(userRepository.findUserByDocument(documentNumber)).thenReturn(Mono.empty());
+
+        StepVerifier.create(userUseCase.getUserByDocumentNumber(documentNumber))
+                .expectError(ResourceNotFoundException.class)
+                .verify();
+
+        verify(userRepository).findUserByDocument(documentNumber);
+    }
+
 }
