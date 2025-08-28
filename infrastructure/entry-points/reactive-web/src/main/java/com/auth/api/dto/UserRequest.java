@@ -1,39 +1,40 @@
 package com.auth.api.dto;
 
 import jakarta.validation.constraints.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static com.auth.api.utils.Constants.*;
+
 public record UserRequest(
 
-        @NotBlank(message = "El nombre es obligatorio")
+        @NotBlank(message = NAME_REQUIRED)
         String name,
 
-        @NotBlank(message = "El apellido es obligatorio")
+        @NotBlank(message = LASTNAME_REQUIRED)
         String lastname,
 
-        @NotNull(message = "La fecha de nacimiento es obligatoria")
+        @NotNull(message = BIRTHDATE_REQUIRED)
         LocalDate birthDate,
 
-        @NotBlank(message = "El documento es obligatorio")
+        @NotBlank(message = DOCUMENT_REQUIRED)
         String documentNumber,
 
-        @NotBlank(message = "El teléfono es obligatorio")
+        @NotBlank(message = PHONE_REQUIRED)
         String phone,
 
-        @NotBlank(message = "El correo es obligatorio")
-        @Email(message = "El correo no tiene un formato válido")
+        @NotBlank(message = EMAIL_REQUIRED)
+        @Email(message = EMAIL_INVALID)
         String email,
 
-        @NotBlank(message = "La dirección es obligatoria")
+        @NotBlank(message = ADDRESS_REQUIRED)
         String address,
 
-        @NotNull(message = "El salario base es obligatorio")
-        @DecimalMin(value = "0.0", message = "El salario base debe ser mayor o igual a 0")
-        @DecimalMax(value = "15000000.0", message = "El salario base no puede superar los 15 millones")
+        @NotNull(message = BASE_SALARY_REQUIRED)
+        @DecimalMin(value = "0.0", message = BASE_SALARY_MIN)
+        @DecimalMax(value = "15000000.0", message = BASE_SALARY_MAX)
         BigDecimal baseSalary,
 
-        @NotNull(message = "El rol es obligatorio")
+        @NotNull(message = ROLE_REQUIRED)
         Long roleId) {
 }
