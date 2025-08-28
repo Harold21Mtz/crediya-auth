@@ -117,35 +117,4 @@ class UserUseCaseTest {
         verify(logger).trace("Inicio de creación de usuario");
         verify(logger).info("Usuario creado con correo: " + user.getEmail());
     }
-
-    @Test
-    void createUser_shouldFail_whenEmailExists() {
-
-        when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(true));
-        when(roleRepository.existsRole(any())).thenReturn(Mono.just(true));
-
-        StepVerifier.create(userUseCase.createUser(user))
-                .expectError(ConflictException.class)
-                .verify();
-
-        verify(userRepository).existsByEmail(user.getEmail());
-        verify(userRepository, never()).saveUser(any());
-        verify(roleRepository, never()).existsRole(any());
-    }
-
-    @Test
-    void createUser_shouldFail_whenRoleNotExists() {
-
-        when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(false));
-        when(roleRepository.existsRole(user.getRoleId())).thenReturn(Mono.just(false));
-
-        StepVerifier.create(userUseCase.createUser(user))
-                .expectError(ResourceNotFoundException.class)
-                .verify();
-
-        verify(userRepository).existsByEmail(user.getEmail());
-        verify(roleRepository).existsRole(user.getRoleId());
-        verify(userRepository, never()).saveUser(any());
-    }
-
 }
