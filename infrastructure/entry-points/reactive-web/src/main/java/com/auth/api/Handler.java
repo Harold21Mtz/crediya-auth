@@ -11,6 +11,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
 public class Handler {
@@ -25,6 +27,13 @@ public class Handler {
                         .then(ServerResponse.ok()
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue("{\"message\": \"Usuario creado\"}")));
+    }
+
+    public Mono<ServerResponse> getUserByDocumentNumber(ServerRequest request) {
+        return userUseCase.getUserByDocumentNumber(request.pathVariable("document_number"))
+                .flatMap(user -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(Map.of("email", user.getEmail())));
     }
 
 }

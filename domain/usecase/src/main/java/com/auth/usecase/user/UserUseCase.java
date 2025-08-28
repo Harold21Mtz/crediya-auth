@@ -41,10 +41,30 @@ public class UserUseCase {
 
         return transactionalWrapper.transactional(
                 existsEmail(user.getEmail())
-                        .then(Mono.defer(() -> existsRole(user.getRoleId())))
-                        .then(Mono.defer(() -> userRepository.saveUser(user)))
-                        .doOnSuccess(v -> logger.info("Usuario creado con correo: " + user.getEmail()))
-//                        .doOnError(err -> logger.error("Error en crear el usuario", err))
+                        .doOnSubscribe(sub -> logger.debug("Verificando existencia de correo: " + user.getEmail()))
+                        .doOnSuccess(v -> logger.info("Correo válido: " + user.getEmail()))
+                        .doOnError(err -> logger.error("Error al verificar correo: " + user.getEmail(), err))
+                        .then(Mono.defer(() -> {
+                            logger.debug("Verificando existencia del rol con id: " + user.getRoleId());
+                            return existsRole(user.getRoleId())
+                                    .doOnSuccess(v -> logger.info("Rol válido: " + user.getRoleId()));
+                        }))
+                        .then(Mono.defer(() -> {
+                            logger.debug("Guardando usuario en la base de datos: " + user);
+                            return userRepository.saveUser(user)
+                                    .doOnSuccess(v -> logger.info("Usuario guardado con éxito: " + user.getEmail()))
+                                    .doOnError(err -> logger.error("Error al guardar usuario: " + user.getEmail(), err));
+                        }))
         );
     }
+
+    public Mono<User> getUserByDocumentNumber(String documentNumber) {
+        return userRepository.findUserByDocument(documentNumber)
+                .doOnNext(foundUser -> logger.info("Usuario encontrado: " + foundUser.getName()))
+                .switchIfEmpty(Mono.defer(() -> {
+                    logger.error("No existe el usuario buscado con documento: " + documentNumber, null);
+                    return Mono.error(new ResourceNotFoundException("No existe el usuario con email: " + documentNumber));
+                }));
+    }
+
 }
